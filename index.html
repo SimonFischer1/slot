@@ -1,150 +1,111 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Gold Rush Slots</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<style>
-:root{--gold:#ffd54a;--gold2:#c98a12;--bg:#0b0618;--card:#1a1033;color-scheme:dark}
-*{box-sizing:border-box;margin:0}
-body{min-height:100vh;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#fff;background:radial-gradient(ellipse at 50% 0,#3a1470 0,#150a2e 45%,var(--bg) 100%);display:flex;flex-direction:column;align-items:center;padding-bottom:24px}
-.top{width:100%;display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 16px;background:linear-gradient(90deg,#2a0f55,#5b1b8f,#2a0f55);border-bottom:2px solid var(--gold2)}
-.banner{flex:1;text-align:center;font-weight:800;letter-spacing:.5px;color:#1b1030;background:linear-gradient(180deg,#ffe98a,var(--gold) 50%,var(--gold2));border:0;border-radius:12px;padding:10px;cursor:pointer;box-shadow:0 0 18px #ffd54a88;animation:glow 2s infinite alternate}
-@keyframes glow{to{box-shadow:0 0 30px #ffd54acc}}
-.pill{background:#00000066;border:1px solid #ffffff30;border-radius:20px;padding:8px 14px;color:#fff;font-size:14px;cursor:pointer}
-h1{margin:22px 0 4px;font-size:clamp(28px,6vw,46px);background:linear-gradient(180deg,#fff6c2,var(--gold) 55%,var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 30px #ffd54a55;letter-spacing:2px}
-.machine{display:flex;align-items:center;gap:14px;margin:16px 8px}
-.frame{padding:14px;border-radius:24px;background:linear-gradient(145deg,#ffe98a,var(--gold2) 50%,#7a4d05);box-shadow:0 0 50px #ffd54a55,inset 0 0 12px #0008}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px;border-radius:14px;background:#0a0418;box-shadow:inset 0 0 25px #000}
-.cell{width:clamp(70px,22vw,120px);aspect-ratio:1;display:grid;place-items:center;font-size:clamp(38px,12vw,68px);border-radius:12px;background:linear-gradient(180deg,#fff,#e9e0ff 60%,#bcaee6);box-shadow:inset 0 -6px 10px #0003;transition:transform .2s}
-.cell.spin{filter:blur(2px);animation:shake .12s infinite}
-@keyframes shake{50%{transform:translateY(5px)}}
-.cell.hit{animation:hit .5s infinite alternate;background:linear-gradient(180deg,#fff7c4,var(--gold));box-shadow:0 0 22px var(--gold)}
-@keyframes hit{to{transform:scale(1.1)}}
-.lever{width:34px;height:150px;position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.lever:before{content:"";position:absolute;left:12px;bottom:0;width:10px;height:110px;background:linear-gradient(90deg,#999,#eee,#777);border-radius:6px;transform-origin:bottom;transition:transform .25s}
-.lever:after{content:"";position:absolute;left:0;top:0;width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff8a8a,#d00 60%,#600);box-shadow:0 4px 10px #0009;transition:transform .25s}
-.lever.pull:after{transform:translateY(80px)}
-.lever.pull:before{transform:scaleY(.35)}
-#win{height:34px;font-size:24px;font-weight:800;color:var(--gold);text-shadow:0 0 14px var(--gold)}
-.bar{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:stretch;background:var(--card);border:1px solid #ffffff22;border-radius:18px;padding:12px 16px;margin:6px 8px}
-.box{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:100px}
-.box small{font-size:11px;letter-spacing:1px;opacity:.65}
-.box b{font-size:22px}
-.btn{border:0;border-radius:12px;padding:10px 16px;font-weight:700;font-size:16px;cursor:pointer;color:#fff;background:#3a2670}
-.btn:hover{filter:brightness(1.2)}
-.go{background:linear-gradient(180deg,#ffe98a,var(--gold2));color:#1b1030;font-size:20px;padding:12px 26px}
-.on{background:#2fbf71;color:#fff}
-.m{position:fixed;inset:0;background:#000a;display:grid;place-items:center;z-index:9;padding:12px}
-.m[hidden]{display:none}
-.mb{width:min(420px,100%);max-height:92vh;overflow:auto;background:#1a1033;border:1px solid var(--gold2);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:10px}
-input,.mb button{font:inherit}
-input{padding:11px;border-radius:10px;border:1px solid #ffffff30;background:#0b0618;color:#fff}
-hr{border:0;border-top:1px solid #ffffff25;margin:6px 0}
-#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#000d;border:1px solid var(--gold2);padding:10px 18px;border-radius:12px;opacity:0;transition:.3s;pointer-events:none;z-index:10}
-#toast.s{opacity:1}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b26">
+  <title>Nordlicht Slots — Freispiele</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root{color-scheme:dark;--ink:#071b26;--panel:#102d38;--panel2:#173b47;--gold:#ffd36b;--mint:#8fe3c0;--muted:#a9c2c8;--line:#ffffff20}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;color:#f5fbf8;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(ellipse at 50% -10%,#286375 0,#102d38 38%,var(--ink) 78%)}
+    button,input{font:inherit}button{cursor:pointer}.shell{width:min(980px,100%);margin:auto;padding:16px 18px 34px}.topbar{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--line);border-radius:18px;background:#071b26b8;backdrop-filter:blur(12px)}.brand{font-weight:900;letter-spacing:.08em;color:var(--gold);white-space:nowrap}.banner{flex:1;text-align:center;padding:11px;border:1px solid #ffd36b66;border-radius:12px;color:#17252a;background:linear-gradient(110deg,#ffe8a3,var(--gold),#f0ab38);font-weight:900}.account{border:1px solid var(--line);border-radius:12px;padding:10px 14px;color:#fff;background:var(--panel2)}
+    header{text-align:center;padding:28px 8px 14px}h1{font-size:clamp(2rem,6vw,3.8rem);margin:0;color:#fff2c7;text-shadow:0 4px 28px #ffd36b44;letter-spacing:.04em}.subtitle{color:var(--muted);margin:8px 0}.notice{margin:16px auto 22px;max-width:760px;padding:10px 14px;border:1px solid #8fe3c044;border-radius:12px;color:#c7e9dc;background:#8fe3c00d;font-size:.9rem}
+    .machine{position:relative;margin:0 auto;width:max-content;max-width:100%;padding:clamp(10px,3vw,22px);border:4px solid #c78d36;border-radius:28px;background:linear-gradient(145deg,#ffe29a 0,#bd7b2c 19%,#70431f 48%,#e0a544);box-shadow:0 24px 70px #0008,inset 0 0 0 3px #fff3}.machine-inner{padding:clamp(9px,2vw,18px);border:2px solid #ffe3a2;border-radius:18px;background:linear-gradient(160deg,#154653,#08232e);box-shadow:inset 0 0 28px #0009}.grid{display:grid;grid-template-columns:repeat(3,minmax(70px,clamp(76px,20vw,146px)));gap:8px}.cell{display:grid;place-items:center;aspect-ratio:1;border:2px solid #d5b568;border-radius:14px;background:linear-gradient(145deg,#f9f2d9,#d4e5d9);font-size:clamp(2.6rem,10vw,5rem);text-shadow:0 3px 4px #0003;box-shadow:inset 0 0 14px #4e391833}.cell.spinning{animation:jiggle .12s infinite alternate;filter:blur(1px)}.cell.winner{animation:win .55s infinite alternate;background:#fff0aa;box-shadow:0 0 24px #ffd36b}.machine-footer{text-align:center;color:#ffe4a3;font-size:.8rem;margin-top:12px;letter-spacing:.1em}@keyframes jiggle{to{transform:translateY(4px)}}@keyframes win{to{transform:scale(1.05)}}
+    .controls{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px;margin:18px auto 0;padding:14px;border:1px solid var(--line);border-radius:18px;background:#102d38cc}.stat{min-width:130px;text-align:center}.stat small{display:block;color:var(--muted);font-size:.72rem;letter-spacing:.12em}.stat strong{font-size:1.35rem}.bet-controls{display:flex;align-items:center;gap:8px}.btn{border:1px solid var(--line);border-radius:12px;padding:10px 14px;background:#214755;color:white;font-weight:750}.btn:hover:not(:disabled){filter:brightness(1.15)}.btn:disabled{opacity:.5;cursor:wait}.primary{color:#17252a;background:linear-gradient(#ffe69b,#efa938);border:0;font-size:1.05rem;padding:13px 22px}.auto.active{background:#39765e;border-color:var(--mint)}.lever{position:absolute;right:-46px;top:24px;width:34px;height:112px;cursor:pointer}.lever:before{content:"";position:absolute;left:15px;top:14px;width:8px;height:88px;border-radius:8px;background:linear-gradient(90deg,#777,#fff,#8d642b);transform-origin:top;transition:transform .2s}.lever:after{content:"";position:absolute;left:3px;top:0;width:32px;height:32px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffb4a0,#c53827 68%,#701510);box-shadow:0 4px 9px #0008;transition:transform .2s}.lever.pull:before{transform:rotate(-25deg)}.lever.pull:after{transform:translate(-12px,15px)}#message{height:30px;text-align:center;color:var(--gold);font-weight:800;margin:12px}.footnote{text-align:center;color:#90aab0;font-size:.8rem;margin-top:20px}
+    .modal{position:fixed;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:#000b}.modal[hidden]{display:none}.dialog{width:min(440px,100%);max-height:90vh;overflow:auto;padding:22px;border:1px solid #d9a74f;border-radius:20px;background:#102d38;box-shadow:0 20px 70px #000b}.dialog h2{margin:0 0 8px}.dialog p{color:var(--muted)}.dialog input{width:100%;margin:5px 0 10px;padding:12px;border:1px solid var(--line);border-radius:10px;background:#071b26;color:white}.dialog .btn{width:100%;margin-top:7px}.dialog hr{border:0;border-top:1px solid var(--line);margin:16px 0}.admin[hidden],.user[hidden],.auth[hidden]{display:none}.admin{padding-top:10px}.small{font-size:.82rem}.close{margin-top:16px!important;background:transparent!important}
+    @media(max-width:600px){.shell{padding:10px}.topbar{padding:9px;gap:7px}.brand{font-size:.76rem}.banner{font-size:.8rem;padding:9px 5px}.account{padding:9px;font-size:.8rem}.machine{margin-right:24px}.lever{right:-35px;transform:scale(.8);transform-origin:top right}.controls{gap:9px}.stat{min-width:112px}}
+  </style>
 </head>
 <body>
-<div class="top">
-  <button class="pill" id="acc">Anmelden</button>
-  <button class="banner" id="topup">💰 GUTHABEN AUFLADEN 💰</button>
-  <div class="pill" id="topbal">€0,00</div>
-</div>
-<h1>GOLD RUSH SLOTS</h1>
-<div id="win"></div>
-<div class="machine">
-  <div class="frame"><div class="grid" id="grid"></div></div>
-  <div class="lever" id="lever" title="Hebel ziehen"></div>
-</div>
-<div class="bar">
-  <div class="box"><small>GUTHABEN</small><b id="bal">€0,00</b></div>
-  <div class="box"><small>EINSATZ</small><div><button class="btn" id="m">−</button> <b id="bet">€2,00</b> <button class="btn" id="p">+</button></div></div>
-  <button class="btn go" id="spin">SPIN</button>
-  <button class="btn" id="auto">AUTO</button>
-</div>
+  <main class="shell">
+    <nav class="topbar" aria-label="Konto">
+      <div class="brand">✦ NORDLICHT</div>
+      <button class="banner" id="topup">🎁 DEMO-CREDITS · NUR VIRTUELL</button>
+      <button class="account" id="account">Anmelden</button>
+    </nav>
+    <header><h1>NORDLICHT SLOTS</h1><p class="subtitle">Dreh die Walzen und entdecke deinen Glücksmoment.</p></header>
+    <p class="notice">Kostenloses Spiel mit virtuellen Demo-Credits. Kein Echtgeld, keine Einzahlungen und keine Auszahlungen.</p>
+    <section class="machine" aria-label="Slotmaschine">
+      <div class="machine-inner"><div class="grid" id="grid" aria-live="polite"></div><div class="machine-footer">✦ · 5 GEWINNLINIEN · VIRTUELLE CREDITS · ✦</div></div>
+      <button class="lever" id="lever" aria-label="Hebel ziehen" title="Hebel ziehen"></button>
+    </section>
+    <div id="message" aria-live="polite"></div>
+    <section class="controls" aria-label="Spielsteuerung">
+      <div class="stat"><small>DEMO-GUTHABEN</small><strong id="balance">—</strong></div>
+      <div class="stat"><small>EINSATZ</small><div class="bet-controls"><button class="btn" id="betDown" aria-label="Einsatz verringern">−</button><strong id="bet">2</strong><button class="btn" id="betUp" aria-label="Einsatz erhöhen">+</button></div></div>
+      <button class="btn primary" id="spin">DREHEN</button>
+      <button class="btn auto" id="auto">AUTO</button>
+    </section>
+    <p class="footnote">Die Gewinnchance ist fest und für alle gleich. Spiel verantwortungsvoll — auch bei kostenlosen Spielen.</p>
+  </main>
 
-<div class="m" id="mod" hidden><div class="mb">
-  <h2 id="mt">Konto</h2>
-  <div id="authbox">
-    <input id="em" type="email" placeholder="E-Mail" style="width:100%;margin-bottom:8px">
-    <input id="pw" type="password" placeholder="Passwort (mind. 6 Zeichen)" style="width:100%;margin-bottom:8px">
-    <button class="btn go" id="login" style="font-size:16px">Anmelden</button>
-    <button class="btn" id="reg">Registrieren</button>
-  </div>
-  <div id="userbox" hidden><p id="who"></p><button class="btn" id="out">Abmelden</button></div>
-  <div id="adm" hidden>
-    <hr><h3>Admin</h3>
-    <input id="aem" type="email" placeholder="E-Mail des Spielers">
-    <input id="aam" type="number" placeholder="Betrag in € (negativ = abziehen)">
-    <button class="btn on" id="aadd">Guthaben freischalten</button>
-    <hr>
-    <label>Glücksprozente: <b id="lv">100</b> % (100 = Standard)</label>
-    <input id="lk" type="range" min="10" max="300" step="5" value="100">
-    <div><button class="btn on" id="lset">Setzen</button> <button class="btn" id="lreset">Standard (100)</button></div>
-  </div>
-  <button class="btn" id="close">Schließen</button>
-</div></div>
-<div id="toast"></div>
-
-<script>
-// ===== HIER EINTRAGEN (Supabase -> Project Settings -> API) =====
-const SB_URL='https://ltdnipeizdilscpqzirc.supabase.co', SB_KEY='sb_publishable_5PY3vem2tbRC-fK8uQ1fOw_XeLV4Kmx';
-// ================================================================
-const sb=supabase.createClient(SB_URL,SB_KEY);
-const SYM=['🍒','🍋','🍇','🔔','⭐','7️⃣'],BETS=[1,2,5,10,20,50],LINES=[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[6,4,2]];
-let user=null,prof=null,bi=1,busy=false,auto=false;
-const $=id=>document.getElementById(id),sleep=t=>new Promise(r=>setTimeout(r,t));
-const eur=n=>'€'+Number(n).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
-const grid=$('grid');for(let i=0;i<9;i++){const d=document.createElement('div');d.className='cell';d.textContent=SYM[[0,1,2,3,4,5,2,1,0][i]];grid.append(d)}
-const cells=[...grid.children];
-function toast(t){const e=$('toast');e.textContent=t;e.classList.add('s');setTimeout(()=>e.classList.remove('s'),2600)}
-function setBal(b){$('bal').textContent=$('topbal').textContent=eur(b)}
-function showBet(){$('bet').textContent=eur(BETS[bi])}
-async function load(){
-  const {data:{session}}=await sb.auth.getSession();user=session?session.user:null;
-  if(!user){prof=null;setBal(0);$('acc').textContent='Anmelden';$('authbox').hidden=false;$('userbox').hidden=true;$('adm').hidden=true;return}
-  const {data}=await sb.from('profiles').select('*').eq('id',user.id).single();
-  prof=data||{balance:0,is_admin:false};setBal(prof.balance);
-  $('acc').textContent='👤 '+user.email.split('@')[0];$('authbox').hidden=true;$('userbox').hidden=false;
-  $('who').textContent=user.email+(prof.is_admin?' (Admin)':'');$('adm').hidden=!prof.is_admin;
-  if(prof.is_admin){const {data:s}=await sb.from('settings').select('luck').single();if(s){$('lk').value=s.luck;$('lv').textContent=s.luck}}
-}
-async function spin(){
-  if(busy)return false;
-  if(!user){$('mod').hidden=false;return false}
-  const bet=BETS[bi];
-  if(prof.balance<bet){toast('Zu wenig Guthaben');return false}
-  busy=true;$('win').textContent='';cells.forEach(c=>c.classList.remove('hit'));
-  prof.balance-=bet;setBal(prof.balance);
-  cells.forEach(c=>c.classList.add('spin'));
-  const t=setInterval(()=>cells.forEach(c=>{if(c.classList.contains('spin'))c.textContent=SYM[Math.random()*6|0]}),70);
-  const [r]=await Promise.all([sb.rpc('spin',{p_bet:bet}),sleep(900)]);
-  if(r.error){clearInterval(t);cells.forEach(c=>c.classList.remove('spin'));toast(r.error.message);await load();busy=false;return false}
-  const {grid:g,win,balance}=r.data;
-  for(let col=0;col<3;col++){await sleep(350);for(let row=0;row<3;row++){const c=cells[row*3+col];c.classList.remove('spin');c.textContent=SYM[g[row*3+col]]}}
-  clearInterval(t);
-  LINES.forEach(l=>{if(g[l[0]]==g[l[1]]&&g[l[1]]==g[l[2]])l.forEach(i=>cells[i].classList.add('hit'))});
-  prof.balance=balance;setBal(balance);
-  if(win>0)$('win').textContent='🎉 Gewinn '+eur(win)+' 🎉';
-  busy=false;return true;
-}
-async function autoLoop(){while(auto){if(!await spin())break;await sleep(700)}auto=false;$('auto').classList.remove('on')}
-function pull(){$('lever').classList.add('pull');setTimeout(()=>$('lever').classList.remove('pull'),450);spin()}
-$('spin').onclick=()=>spin();$('lever').onclick=pull;
-$('auto').onclick=()=>{auto=!auto;$('auto').classList.toggle('on',auto);if(auto)autoLoop()};
-$('m').onclick=()=>{bi=Math.max(0,bi-1);showBet()};$('p').onclick=()=>{bi=Math.min(BETS.length-1,bi+1);showBet()};
-$('acc').onclick=()=>$('mod').hidden=false;$('close').onclick=()=>$('mod').hidden=true;
-$('topup').onclick=()=>toast(user?'Aufladen: Guthaben wird vom Betreiber für dein Konto freigeschaltet.':'Bitte zuerst anmelden.');
-$('login').onclick=async()=>{const {error}=await sb.auth.signInWithPassword({email:$('em').value,password:$('pw').value});error?toast(error.message):($('mod').hidden=true,load())};
-$('reg').onclick=async()=>{const {error}=await sb.auth.signUp({email:$('em').value,password:$('pw').value});toast(error?error.message:'Registriert! Ggf. E-Mail bestätigen, dann anmelden.')};
-$('out').onclick=async()=>{await sb.auth.signOut();auto=false;$('mod').hidden=true;load()};
-$('aadd').onclick=async()=>{const {data,error}=await sb.rpc('admin_add',{p_email:$('aem').value,p_amount:parseFloat($('aam').value)});toast(error?error.message:'Neues Guthaben: '+eur(data));if(!error)load()};
-$('lk').oninput=()=>$('lv').textContent=$('lk').value;
-$('lset').onclick=async()=>{const {error}=await sb.rpc('admin_luck',{p_luck:+$('lk').value});toast(error?error.message:'Glücksprozente: '+$('lk').value+' %')};
-$('lreset').onclick=async()=>{$('lk').value=100;$('lv').textContent=100;const {error}=await sb.rpc('admin_luck',{p_luck:100});toast(error?error.message:'Auf Standard (100 %) zurückgesetzt')};
-sb.auth.onAuthStateChange(()=>load());showBet();load();
-</script>
+  <div class="modal" id="modal" hidden><section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+    <h2 id="dialogTitle">Dein Konto</h2>
+    <div class="auth" id="authBox"><p>Melde dich an oder erstelle ein Konto. Für neue Konten gibt es 1.000 virtuelle Demo-Credits.</p><input id="email" type="email" autocomplete="email" placeholder="E-Mail-Adresse"><input id="password" type="password" autocomplete="current-password" placeholder="Passwort (mind. 6 Zeichen)"><button class="btn primary" id="login">Anmelden</button><button class="btn" id="register">Konto erstellen</button></div>
+    <div class="user" id="userBox" hidden><p id="who"></p><button class="btn" id="logout">Abmelden</button></div>
+    <div class="admin" id="adminBox" hidden><hr><h3>Admin · Demo-Credits</h3><p class="small">Nur virtuelle Credits; diese Funktion verarbeitet kein Geld.</p><input id="targetEmail" type="email" placeholder="E-Mail des Spielers"><input id="amount" type="number" min="1" max="100000" step="1" placeholder="Credits hinzufügen"><button class="btn" id="grant">Credits gutschreiben</button></div>
+    <button class="btn close" id="close">Schließen</button>
+  </section></div>
+  <div class="modal" id="noticeModal" hidden><section class="dialog"><h2>Demo-Credits</h2><p>Dies ist eine reine Spiel-Demo. Es gibt keine Echtgeld-Aufladung oder Auszahlung. Neue Konten starten mit virtuellen Credits; weitere Demo-Credits kann der Betreiber im Konto-Dialog vergeben.</p><button class="btn" id="noticeClose">Alles klar</button></section></div>
+  <script>
+    // Supabase Dashboard -> Project Settings -> API. Der publishable key ist für Browser-Apps vorgesehen.
+    const SUPABASE_URL = 'https://ltdnipeizdilscpqzirc.supabase.co';
+    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_5PY3vem2tbRC-fK8uQ1fOw_XeLV4Kmx';
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+    const symbols = ['🍒','🍋','🍇','🔔','⭐','7️⃣'];
+    const bets = [1,2,5,10,20,50];
+    const lines = [[0,1,2],[3,4,5],[6,7,8],[0,4,8],[6,4,2]];
+    const $ = id => document.getElementById(id);
+    const cells = [];
+    let user = null, profile = null, betIndex = 1, busy = false, auto = false, autoToken = 0;
+    const grid = $('grid');
+    for (let i=0;i<9;i++){const cell=document.createElement('div');cell.className='cell';cell.textContent=symbols[(i*3+1)%symbols.length];grid.append(cell);cells.push(cell)}
+    const credits = n => `${Math.floor(Number(n)||0).toLocaleString('de-DE')} Credits`;
+    function say(text){$('message').textContent=text}
+    function setBalance(value){$('balance').textContent=credits(value)}
+    function showBet(){$('bet').textContent=credits(bets[betIndex])}
+    function openAccount(){$('modal').hidden=false}
+    async function refresh(){
+      const {data:{session}}=await sb.auth.getSession();
+      user=session?.user||null; profile=null;
+      if(user){const {data,error}=await sb.from('profiles').select('email,balance,is_admin').eq('id',user.id).maybeSingle();if(!error)profile=data}
+      setBalance(profile?.balance??0);
+      $('account').textContent=user?(user.email.split('@')[0]||'Konto'):'Anmelden';
+      $('authBox').hidden=!!user;$('userBox').hidden=!user;$('adminBox').hidden=!(user&&profile?.is_admin);
+      if(user)$('who').textContent=`Angemeldet als ${user.email}${profile?.is_admin?' · Admin':''}`;
+    }
+    function setBusy(value){busy=value;$('spin').disabled=value;$('lever').disabled=value;}
+    async function spin(){
+      if(busy)return false;
+      if(!user){openAccount();say('Bitte anmelden, um zu spielen.');return false}
+      if(!profile){await refresh();if(!profile){say('Konto nicht gefunden. Bitte SQL-Setup prüfen.');return false}}
+      setBusy(true);say('');cells.forEach(c=>{c.classList.remove('winner');c.classList.add('spinning')});
+      const timer=setInterval(()=>cells.forEach(c=>c.textContent=symbols[Math.random()*symbols.length|0]),75);
+      const {data,error}=await sb.rpc('spin',{p_bet:bets[betIndex]});
+      clearInterval(timer);cells.forEach(c=>c.classList.remove('spinning'));
+      if(error){say(error.message.includes('Guthaben')?'Zu wenig Demo-Credits.':error.message);await refresh();setBusy(false);return false}
+      const result=data;
+      for(let i=0;i<9;i++)cells[i].textContent=symbols[result.grid[i]];
+      const winning=[];for(const line of lines){const [a,b,c]=line;if(result.grid[a]===result.grid[b]&&result.grid[b]===result.grid[c])winning.push(...line)}
+      [...new Set(winning)].forEach(i=>cells[i].classList.add('winner'));
+      profile.balance=result.balance;setBalance(result.balance);
+      say(result.win>0?`🎉 Gewinn: ${credits(result.win)} 🎉`:'Noch kein Gewinn — gleich nochmal?');
+      setBusy(false);return true;
+    }
+    async function autoPlay(token){while(auto&&token===autoToken){const ok=await spin();if(!ok)break;await new Promise(r=>setTimeout(r,850))}if(token===autoToken){auto=false;$('auto').classList.remove('active')}}
+    $('spin').addEventListener('click',spin);
+    $('lever').addEventListener('click',()=>{$('lever').classList.add('pull');setTimeout(()=>$('lever').classList.remove('pull'),350);spin()});
+    $('auto').addEventListener('click',()=>{auto=!auto;autoToken++;$('auto').classList.toggle('active',auto);if(auto)autoPlay(autoToken)});
+    $('betDown').onclick=()=>{betIndex=Math.max(0,betIndex-1);showBet()};$('betUp').onclick=()=>{betIndex=Math.min(bets.length-1,betIndex+1);showBet()};
+    $('account').onclick=openAccount;$('close').onclick=()=>$('modal').hidden=true;
+    $('topup').onclick=()=>$('noticeModal').hidden=false;$('noticeClose').onclick=()=>$('noticeModal').hidden=true;
+    $('login').onclick=async()=>{const {error}=await sb.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error){say(error.message);return}$('modal').hidden=true;await refresh();say('Willkommen zurück!')};
+    $('register').onclick=async()=>{const {data,error}=await sb.auth.signUp({email:$('email').value.trim(),password:$('password').value});if(error){say(error.message);return}say(data.session?'Konto erstellt — du kannst losspielen.':'Registrierung gesendet. Bitte E-Mail bestätigen und anschließend anmelden.');if(data.session){await refresh()}};
+    $('logout').onclick=async()=>{auto=false;autoToken++;await sb.auth.signOut();$('modal').hidden=true;await refresh();say('Du wurdest abgemeldet.')};
+    $('grant').onclick=async()=>{const amount=Number($('amount').value);if(!Number.isInteger(amount)||amount<1||amount>100000){say('Bitte 1 bis 100.000 Credits eingeben.');return}const {data,error}=await sb.rpc('admin_add_demo_credits',{p_email:$('targetEmail').value.trim(),p_amount:amount});if(error){say(error.message);return}say(`Demo-Credits gutgeschrieben. Neues Guthaben: ${credits(data)}`);if($('targetEmail').value.trim().toLowerCase()===user?.email?.toLowerCase())await refresh()};
+    sb.auth.onAuthStateChange((_event,session)=>{user=session?.user||null;setTimeout(refresh,0)});
+    showBet();refresh().catch(()=>say('Verbindung zu Supabase fehlgeschlagen.'));
+  </script>
 </body>
 </html>
