@@ -1,33 +1,36 @@
 # Nordlicht Slots
 
-Eine responsive Slotmaschinen-Demo mit Supabase-Anmeldung und **virtuellen Demo-Credits**. Das Projekt verarbeitet keine Echtgeld-Einzahlungen oder Auszahlungen. Die Spielwahrscheinlichkeiten sind fest und für alle gleich; es gibt keine Admin-Funktion zum Verändern der Gewinnchancen.
+Responsive Slotmaschinen-Demo mit Supabase-Anmeldung, Animationen, Hebel, Autoplay, optionalen Soundeffekten und **virtuellen Demo-Credits**. Kein Echtgeld, keine Einzahlung und keine Auszahlung. Die Gewinnchance ist fest und für alle Spieler gleich; Admins können keine individuellen Quoten einstellen.
 
-## Supabase einrichten
+## Wichtig: Konto nicht gefunden / Spielen nicht möglich
 
-1. Öffne dein Supabase-Projekt und gehe zu **SQL Editor → New query**.
-2. Kopiere den vollständigen Inhalt von [`supabase.sql`](supabase.sql) hinein und führe ihn aus.
-3. In `supabase.sql` ist der Browser-Client bereits auf dieses Projekt eingestellt: `ltdnipeizdilscpqzirc`. Der Publishable Key in `index.html` ist ein öffentlicher Client-Key; **niemals** einen `service_role`- oder Secret-Key in eine HTML-Datei eintragen.
-4. Veröffentliche `index.html` mit GitHub Pages: Repository **Settings → Pages → Build and deployment → Deploy from a branch**, dann Branch `main` und Ordner `/ (root)` auswählen und speichern. Nach dem Deployment zeigt GitHub Pages die Website-URL an.
+Die aktuelle Datenbankmigration legt Profile für bereits registrierte Konten nachträglich an und repariert fehlende Profile beim Laden. Deshalb bitte die SQL-Datei nach dem Website-Update einmal vollständig erneut ausführen.
 
-## Registrierung und Anmeldung
+1. Öffne dein Supabase-Projekt → **SQL Editor → New query**.
+2. Kopiere den vollständigen Inhalt von [`supabase.sql`](supabase.sql) hinein und drücke **Run**.
+3. Prüfe, dass die Abfrage ohne Fehler durchgelaufen ist.
+4. Lade die Website neu und melde dich erneut an. Bestehende Konten erhalten beim Nachtragen kein zusätzliches Startguthaben, damit bereits vorhandene Credits nicht überschrieben werden.
 
-Neue Konten werden beim Registrieren in `auth.users` angelegt. Der Datenbank-Trigger erzeugt automatisch ein Profil mit 1.000 virtuellen Credits. Wenn E-Mail-Bestätigung im Supabase-Projekt aktiviert ist, muss der Bestätigungslink zuerst angeklickt werden. Für den produktiven Einsatz sollte die Bestätigung aktiviert bleiben.
+Die Website ist für das Supabase-Projekt `ltdnipeizdilscpqzirc` konfiguriert. Der Publishable Key in `index.html` ist ein öffentlicher Browser-Key; niemals einen `service_role`- oder Secret-Key veröffentlichen.
 
-Falls die Registrierung scheitert, kontrolliere in Supabase:
+## Supabase Auth und GitHub Pages
 
-- **Authentication → Providers → Email** ist aktiviert.
-- **Authentication → URL Configuration** enthält die veröffentlichte Website unter **Site URL** sowie bei **Redirect URLs**.
-- `supabase.sql` wurde ohne Fehler ausgeführt; unter **Table Editor** existiert `profiles`.
-- Unter **Authentication → Users** ist das Konto vorhanden. Existiert es bereits, führt das SQL-Backfill das Profil beim erneuten Ausführen des Skripts nach.
+- Supabase **Authentication → Sign In / Providers → Email** aktivieren.
+- Unter **Authentication → URL Configuration** die veröffentlichte Website als Site URL und Redirect URL eintragen.
+- GitHub Repository **Settings → Pages → Build and deployment → Deploy from a branch**, `main` und `/ (root)` auswählen. Die URL `https://simonfischer1.github.io/slot/` sollte außerdem in Supabase Redirect URLs stehen.
+- Bei aktivierter E-Mail-Bestätigung muss der Link aus der Bestätigungsmail vor dem ersten Login geöffnet werden.
 
-## Admin-Konto
+## Admin-Demo-Konto und Spielerverwaltung
 
-1. Registriere dein Konto und bestätige die E-Mail.
-2. Öffne den Supabase SQL Editor und führe die unten in `supabase.sql` kommentierte `UPDATE public.profiles ...`-Anweisung separat aus. Passe die E-Mail bei Bedarf an.
-3. Melde dich auf der Website ab und wieder an. Im Konto-Dialog erscheint dann die Admin-Funktion, um **virtuelle Demo-Credits** gutzuschreiben.
+1. Einmal mit dem gewünschten Admin-Konto registrieren und E-Mail bestätigen.
+2. Supabase **SQL Editor** öffnen und die letzte, auskommentierte Admin-Zeile aus `supabase.sql` separat ausführen. Die E-Mail in der Zeile bei Bedarf anpassen.
+3. Website neu laden und ab-/wieder anmelden. Im Konto-Dialog erscheinen Spielerliste und Credits-Verwaltung.
+4. Eine positive Zahl schreibt virtuelle Credits gut; eine negative Zahl zieht Credits ab. Das Guthaben darf nicht unter null fallen.
 
-## Sicherheit und Hosting
+**Keine personalisierte Glückssteuerung:** Das Admin-Panel kann und wird die Gewinnchance einzelner Spieler nicht ändern. Eine transparente, einheitliche Quote ist wichtig, damit Spielergebnisse nicht heimlich manipuliert werden.
 
-Der Publishable Key ist für Browser-Apps gedacht; der Schutz erfolgt durch Row Level Security und serverseitige RPC-Funktionen. Keine Passwörter oder Secret-/Service-Role-Keys in GitHub commiten. Ändere Passwörter sofort, falls sie in Chat, Code oder einem öffentlichen Repository geteilt wurden.
+## Wenn es danach noch nicht funktioniert
 
-GitHub Pages hostet nur statische Dateien. Echtgeld-Glücksspiel benötigt je nach Markt unter anderem Genehmigungen, Alters-/Identitätsprüfungen, Zahlungs- und Spielerschutzmaßnahmen sowie rechtliche Prüfung. Dieses Repository ist deshalb ausdrücklich eine kostenlose Demo und keine Echtgeld-Casino-Plattform.
+Die Seite zeigt jetzt konkrete Supabase-Fehler im Konto-Dialog. Kontrolliere in Supabase **Authentication → Users**, dass das Konto existiert und bestätigt ist, und im SQL Editor, ob die aktuelle Datei ohne Fehler ausgeführt wurde. Falls die Anmeldung klappt, aber SQL einen Fehler meldet, kopiere bitte nur den Fehlermeldungstext (keine Passwörter oder Secrets).
+
+Passwörter, die in Chat, Code oder einem öffentlichen Repository geteilt wurden, bitte sofort ändern. Echtgeld-Glücksspiel erfordert je nach Markt Lizenzen und weitere rechtliche, technische und Spielerschutzmaßnahmen; dieses Projekt ist nur eine Demo.
