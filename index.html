@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gold Rush Slots</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<style>
+:root{--gold:#ffd54a;--gold2:#c98a12;--bg:#0b0618;--card:#1a1033;color-scheme:dark}
+*{box-sizing:border-box;margin:0}
+body{min-height:100vh;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#fff;background:radial-gradient(ellipse at 50% 0,#3a1470 0,#150a2e 45%,var(--bg) 100%);display:flex;flex-direction:column;align-items:center;padding-bottom:24px}
+.top{width:100%;display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 16px;background:linear-gradient(90deg,#2a0f55,#5b1b8f,#2a0f55);border-bottom:2px solid var(--gold2)}
+.banner{flex:1;text-align:center;font-weight:800;letter-spacing:.5px;color:#1b1030;background:linear-gradient(180deg,#ffe98a,var(--gold) 50%,var(--gold2));border:0;border-radius:12px;padding:10px;cursor:pointer;box-shadow:0 0 18px #ffd54a88;animation:glow 2s infinite alternate}
+@keyframes glow{to{box-shadow:0 0 30px #ffd54acc}}
+.pill{background:#00000066;border:1px solid #ffffff30;border-radius:20px;padding:8px 14px;color:#fff;font-size:14px;cursor:pointer}
+h1{margin:22px 0 4px;font-size:clamp(28px,6vw,46px);background:linear-gradient(180deg,#fff6c2,var(--gold) 55%,var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 30px #ffd54a55;letter-spacing:2px}
+.machine{display:flex;align-items:center;gap:14px;margin:16px 8px}
+.frame{padding:14px;border-radius:24px;background:linear-gradient(145deg,#ffe98a,var(--gold2) 50%,#7a4d05);box-shadow:0 0 50px #ffd54a55,inset 0 0 12px #0008}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px;border-radius:14px;background:#0a0418;box-shadow:inset 0 0 25px #000}
+.cell{width:clamp(70px,22vw,120px);aspect-ratio:1;display:grid;place-items:center;font-size:clamp(38px,12vw,68px);border-radius:12px;background:linear-gradient(180deg,#fff,#e9e0ff 60%,#bcaee6);box-shadow:inset 0 -6px 10px #0003;transition:transform .2s}
+.cell.spin{filter:blur(2px);animation:shake .12s infinite}
+@keyframes shake{50%{transform:translateY(5px)}}
+.cell.hit{animation:hit .5s infinite alternate;background:linear-gradient(180deg,#fff7c4,var(--gold));box-shadow:0 0 22px var(--gold)}
+@keyframes hit{to{transform:scale(1.1)}}
+.lever{width:34px;height:150px;position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.lever:before{content:"";position:absolute;left:12px;bottom:0;width:10px;height:110px;background:linear-gradient(90deg,#999,#eee,#777);border-radius:6px;transform-origin:bottom;transition:transform .25s}
+.lever:after{content:"";position:absolute;left:0;top:0;width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff8a8a,#d00 60%,#600);box-shadow:0 4px 10px #0009;transition:transform .25s}
+.lever.pull:after{transform:translateY(80px)}
+.lever.pull:before{transform:scaleY(.35)}
+#win{height:34px;font-size:24px;font-weight:800;color:var(--gold);text-shadow:0 0 14px var(--gold)}
+.bar{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:stretch;background:var(--card);border:1px solid #ffffff22;border-radius:18px;padding:12px 16px;margin:6px 8px}
+.box{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:100px}
+.box small{font-size:11px;letter-spacing:1px;opacity:.65}
+.box b{font-size:22px}
+.btn{border:0;border-radius:12px;padding:10px 16px;font-weight:700;font-size:16px;cursor:pointer;color:#fff;background:#3a2670}
+.btn:hover{filter:brightness(1.2)}
+.go{background:linear-gradient(180deg,#ffe98a,var(--gold2));color:#1b1030;font-size:20px;padding:12px 26px}
+.on{background:#2fbf71;color:#fff}
+.m{position:fixed;inset:0;background:#000a;display:grid;place-items:center;z-index:9;padding:12px}
+.m[hidden]{display:none}
+.mb{width:min(420px,100%);max-height:92vh;overflow:auto;background:#1a1033;border:1px solid var(--gold2);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:10px}
+input,.mb button{font:inherit}
+input{padding:11px;border-radius:10px;border:1px solid #ffffff30;background:#0b0618;color:#fff}
+hr{border:0;border-top:1px solid #ffffff25;margin:6px 0}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#000d;border:1px solid var(--gold2);padding:10px 18px;border-radius:12px;opacity:0;transition:.3s;pointer-events:none;z-index:10}
+#toast.s{opacity:1}
+</style>
+</head>
+<body>
+<div class="top">
+  <button class="pill" id="acc">Anmelden</button>
+  <button class="banner" id="topup">💰 GUTHABEN AUFLADEN 💰</button>
+  <div class="pill" id="topbal">€0,00</div>
+</div>
+<h1>GOLD RUSH SLOTS</h1>
+<div id="win"></div>
+<div class="machine">
+  <div class="frame"><div class="grid" id="grid"></div></div>
+  <div class="lever" id="lever" title="Hebel ziehen"></div>
+</div>
+<div class="bar">
+  <div class="box"><small>GUTHABEN</small><b id="bal">€0,00</b></div>
+  <div class="box"><small>EINSATZ</small><div><button class="btn" id="m">−</button> <b id="bet">€2,00</b> <button class="btn" id="p">+</button></div></div>
+  <button class="btn go" id="spin">SPIN</button>
+  <button class="btn" id="auto">AUTO</button>
+</div>
+
+<div class="m" id="mod" hidden><div class="mb">
+  <h2 id="mt">Konto</h2>
+  <div id="authbox">
+    <input id="em" type="email" placeholder="E-Mail" style="width:100%;margin-bottom:8px">
+    <input id="pw" type="password" placeholder="Passwort (mind. 6 Zeichen)" style="width:100%;margin-bottom:8px">
+    <button class="btn go" id="login" style="font-size:16px">Anmelden</button>
+    <button class="btn" id="reg">Registrieren</button>
+  </div>
+  <div id="userbox" hidden><p id="who"></p><button class="btn" id="out">Abmelden</button></div>
+  <div id="adm" hidden>
+    <hr><h3>Admin</h3>
+    <input id="aem" type="email" placeholder="E-Mail des Spielers">
+    <input id="aam" type="number" placeholder="Betrag in € (negativ = abziehen)">
+    <button class="btn on" id="aadd">Guthaben freischalten</button>
+    <hr>
+    <label>Glücksprozente: <b id="lv">100</b> % (100 = Standard)</label>
+    <input id="lk" type="range" min="10" max="300" step="5" value="100">
+    <div><button class="btn on" id="lset">Setzen</button> <button class="btn" id="lreset">Standard (100)</button></div>
+  </div>
+  <button class="btn" id="close">Schließen</button>
+</div></div>
+<div id="toast"></div>
+
+<script>
+// ===== HIER EINTRAGEN (Supabase -> Project Settings -> API) =====
+const SB_URL='https://ltdnipeizdilscpqzirc.supabase.co', SB_KEY='sb_publishable_5PY3vem2tbRC-fK8uQ1fOw_XeLV4Kmx';
+// ================================================================
+const sb=supabase.createClient(SB_URL,SB_KEY);
+const SYM=['🍒','🍋','🍇','🔔','⭐','7️⃣'],BETS=[1,2,5,10,20,50],LINES=[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[6,4,2]];
+let user=null,prof=null,bi=1,busy=false,auto=false;
+const $=id=>document.getElementById(id),sleep=t=>new Promise(r=>setTimeout(r,t));
+const eur=n=>'€'+Number(n).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
+const grid=$('grid');for(let i=0;i<9;i++){const d=document.createElement('div');d.className='cell';d.textContent=SYM[[0,1,2,3,4,5,2,1,0][i]];grid.append(d)}
+const cells=[...grid.children];
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('s');setTimeout(()=>e.classList.remove('s'),2600)}
+function setBal(b){$('bal').textContent=$('topbal').textContent=eur(b)}
+function showBet(){$('bet').textContent=eur(BETS[bi])}
+async function load(){
+  const {data:{session}}=await sb.auth.getSession();user=session?session.user:null;
+  if(!user){prof=null;setBal(0);$('acc').textContent='Anmelden';$('authbox').hidden=false;$('userbox').hidden=true;$('adm').hidden=true;return}
+  const {data}=await sb.from('profiles').select('*').eq('id',user.id).single();
+  prof=data||{balance:0,is_admin:false};setBal(prof.balance);
+  $('acc').textContent='👤 '+user.email.split('@')[0];$('authbox').hidden=true;$('userbox').hidden=false;
+  $('who').textContent=user.email+(prof.is_admin?' (Admin)':'');$('adm').hidden=!prof.is_admin;
+  if(prof.is_admin){const {data:s}=await sb.from('settings').select('luck').single();if(s){$('lk').value=s.luck;$('lv').textContent=s.luck}}
+}
+async function spin(){
+  if(busy)return false;
+  if(!user){$('mod').hidden=false;return false}
+  const bet=BETS[bi];
+  if(prof.balance<bet){toast('Zu wenig Guthaben');return false}
+  busy=true;$('win').textContent='';cells.forEach(c=>c.classList.remove('hit'));
+  prof.balance-=bet;setBal(prof.balance);
+  cells.forEach(c=>c.classList.add('spin'));
+  const t=setInterval(()=>cells.forEach(c=>{if(c.classList.contains('spin'))c.textContent=SYM[Math.random()*6|0]}),70);
+  const [r]=await Promise.all([sb.rpc('spin',{p_bet:bet}),sleep(900)]);
+  if(r.error){clearInterval(t);cells.forEach(c=>c.classList.remove('spin'));toast(r.error.message);await load();busy=false;return false}
+  const {grid:g,win,balance}=r.data;
+  for(let col=0;col<3;col++){await sleep(350);for(let row=0;row<3;row++){const c=cells[row*3+col];c.classList.remove('spin');c.textContent=SYM[g[row*3+col]]}}
+  clearInterval(t);
+  LINES.forEach(l=>{if(g[l[0]]==g[l[1]]&&g[l[1]]==g[l[2]])l.forEach(i=>cells[i].classList.add('hit'))});
+  prof.balance=balance;setBal(balance);
+  if(win>0)$('win').textContent='🎉 Gewinn '+eur(win)+' 🎉';
+  busy=false;return true;
+}
+async function autoLoop(){while(auto){if(!await spin())break;await sleep(700)}auto=false;$('auto').classList.remove('on')}
+function pull(){$('lever').classList.add('pull');setTimeout(()=>$('lever').classList.remove('pull'),450);spin()}
+$('spin').onclick=()=>spin();$('lever').onclick=pull;
+$('auto').onclick=()=>{auto=!auto;$('auto').classList.toggle('on',auto);if(auto)autoLoop()};
+$('m').onclick=()=>{bi=Math.max(0,bi-1);showBet()};$('p').onclick=()=>{bi=Math.min(BETS.length-1,bi+1);showBet()};
+$('acc').onclick=()=>$('mod').hidden=false;$('close').onclick=()=>$('mod').hidden=true;
+$('topup').onclick=()=>toast(user?'Aufladen: Guthaben wird vom Betreiber für dein Konto freigeschaltet.':'Bitte zuerst anmelden.');
+$('login').onclick=async()=>{const {error}=await sb.auth.signInWithPassword({email:$('em').value,password:$('pw').value});error?toast(error.message):($('mod').hidden=true,load())};
+$('reg').onclick=async()=>{const {error}=await sb.auth.signUp({email:$('em').value,password:$('pw').value});toast(error?error.message:'Registriert! Ggf. E-Mail bestätigen, dann anmelden.')};
+$('out').onclick=async()=>{await sb.auth.signOut();auto=false;$('mod').hidden=true;load()};
+$('aadd').onclick=async()=>{const {data,error}=await sb.rpc('admin_add',{p_email:$('aem').value,p_amount:parseFloat($('aam').value)});toast(error?error.message:'Neues Guthaben: '+eur(data));if(!error)load()};
+$('lk').oninput=()=>$('lv').textContent=$('lk').value;
+$('lset').onclick=async()=>{const {error}=await sb.rpc('admin_luck',{p_luck:+$('lk').value});toast(error?error.message:'Glücksprozente: '+$('lk').value+' %')};
+$('lreset').onclick=async()=>{$('lk').value=100;$('lv').textContent=100;const {error}=await sb.rpc('admin_luck',{p_luck:100});toast(error?error.message:'Auf Standard (100 %) zurückgesetzt')};
+sb.auth.onAuthStateChange(()=>load());showBet();load();
+</script>
+</body>
+</html>
